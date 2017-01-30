@@ -1,0 +1,18 @@
+def set_default_hostname(config)
+  filename = '.default-hostname'
+  if File.exist?(filename)
+    hostname = File.read(filename)
+  else
+    hostname = "vagrant-#{SecureRandom.hex(4)}.its.rmit.edu.au"
+  end
+  f = File.open(filename, 'w')
+  f.write(hostname)
+  f.close
+  config.vm.hostname = "#{hostname}"
+end
+
+Vagrant.configure("2") do |config|
+  set_default_hostname(config)
+  config.vm.provision "shell", path: "http://satellite.its.rmit.edu.au/pub/bootstrap/bootstrap-baseline-rhel7-default.sh"
+end
+
