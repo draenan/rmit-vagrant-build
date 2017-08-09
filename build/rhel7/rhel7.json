@@ -33,6 +33,7 @@
         "type": "shell",
         "inline": [
             "sleep 30",
+            "sudo yum install -y bind-utils csh emacs-nox expect ksh lsof openssh-clients rsync screen strace tcpdump telnet tmux unzip vim-common vim-enhanced vim-minimal zip zsh",
             "sudo mkdir /tmp/vboxguest",
             "sudo mount -t iso9660 -o loop,ro /home/vagrant/VBoxGuestAdditions.iso /tmp/vboxguest",
             "sudo yum install -y gcc bzip2 kernel-devel",
