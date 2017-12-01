@@ -4,7 +4,7 @@
     },
     "builders": [{
         "type": "virtualbox-iso",
-        "vm_name": "rmit-rhel-server-7.2-x86_64",
+        "vm_name": "rmit-rhel-server-7-x86_64",
         "guest_os_type": "RedHat_64",
         "disk_size": "61440",
         "iso_checksum_type": "sha256",
