@@ -23,7 +23,7 @@
     "post-processors": [{
         "type": "vagrant",
         "vagrantfile_template": "files/Vagrantfile",
-        "output": "rmit-rhel-server-7.2-x86_64-nocm-{{.Provider}}-{{user `build_version`}}.box"
+        "output": "rmit-rhel-server-7-x86_64-nocm-{{.Provider}}-{{user `build_version`}}.box"
     }],
     "provisioners": [{
         "type": "file",
