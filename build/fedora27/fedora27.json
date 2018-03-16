@@ -1,0 +1,44 @@
+{
+    "variables": {
+        "build_version": "{{ env `BUILD_VERSION`}}"
+    },
+    "builders": [{
+        "type": "virtualbox-iso",
+        "vm_name": "rmit-fedora-server-27-x86_64",
+        "guest_os_type": "Fedora_64",
+        "disk_size": "61440",
+        "iso_checksum_type": "sha256",
+        "iso_checksum": "e383dd414bb57231b20cbed11c4953cac71785f7d4f5990b0df5ad534a0ba95c",
+        "iso_url": "http://satellite.its.rmit.edu.au/pub/ks/repo/Fedora-Server-dvd-x86_64-27-1.6.iso",
+        "ssh_username": "vagrant",
+        "ssh_password": "vagrant",
+        "ssh_timeout": "20m",
+        "shutdown_command": "sudo -S shutdown -P now",
+        "http_directory": "http",
+        "boot_command": [
+            "<wait><esc><esc>",
+            "linux ks=http://{{.HTTPIP}}:{{.HTTPPort}}/kickstart.cfg<enter>"
+        ]
+    }],
+    "post-processors": [{
+        "type": "vagrant",
+        "vagrantfile_template": "files/Vagrantfile",
+        "output": "rmit-fedora-server-27-x86_64-nocm-{{.Provider}}-{{user `build_version`}}.box"
+    }],
+    "provisioners": [{
+
+        "type": "shell",
+        "inline": [
+            "sleep 30",
+            "sudo mkdir /tmp/vboxguest",
+            "sudo mount -t iso9660 -o loop,ro /home/vagrant/VBoxGuestAdditions.iso /tmp/vboxguest",
+            "sudo yum install -y gcc bzip2 kernel-devel elfutils-libelf-devel",
+            "cd /tmp/vboxguest",
+            "sudo ./VBoxLinuxAdditions.run",
+            "cd /tmp",
+            "sudo umount /tmp/vboxguest",
+            "sudo rmdir /tmp/vboxguest",
+            "rm /home/vagrant/VBoxGuestAdditions.iso"
+        ]
+    }]
+}
