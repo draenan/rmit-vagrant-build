@@ -32,7 +32,7 @@
             "sleep 30",
             "sudo mkdir /tmp/vboxguest",
             "sudo mount -t iso9660 -o loop,ro /home/vagrant/VBoxGuestAdditions.iso /tmp/vboxguest",
-            "sudo yum install -y gcc bzip2 kernel-devel elfutils-libelf-devel",
+            "sudo dnf install -y gcc bzip2 kernel-devel elfutils-libelf-devel",
             "cd /tmp/vboxguest",
             "sudo ./VBoxLinuxAdditions.run",
             "cd /tmp",
