@@ -32,4 +32,4 @@ The original build targets (`build-rhel6` and `build-rhel7`) will build RHEL 6 a
 
 Currently if a box is destroyed via `vagrant destroy` without first running `vagrant ssh -- sudo ./satellite-deregister` you will need to manually remove the box from Satellite.
 
-An additional build target for Fedora (`build-fedora27`) has been added.  This is mostly based off the RHEL 7 build, with the exception of not registering with Satellite.  Setting of the hostname is per the RHEL boxes.
+Additional build targets for Fedora have been added.  These are mostly based off the RHEL 7 build, with the exception of not registering with Satellite.  Setting of the hostname is per the RHEL boxes.
