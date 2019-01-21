@@ -12,7 +12,7 @@ brew install packer
 VirtualBox is also available from Homebrew:
 
 ```
-brew cask install virtualbox virtualbox-extension-pack
+brew cask install virtualbox
 ```
 
 Alternatively it can be downloaded from the VirtualBox [website](http://www.virtualbox.org/wiki/Download_Old_Builds) if you prefer a version with less bugs.
