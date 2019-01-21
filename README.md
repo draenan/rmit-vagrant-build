@@ -31,5 +31,3 @@ Build targets should be fairly obvious in that they `cd` to the relevant subdire
 The original build targets (`build-rhel6` and `build-rhel7`) will build RHEL 6 and RHEL 7 boxes respectively that are almost exactly the same as those built by our standard Kickstart.  These boxes will register with Satellite for updates, and deregister prior to packaging.  They include a default `Vagrantfile` that will assign a random hostname of the form `vagrant-XXXX.its.rmit.edu.au` to the box (where `XXXX` is a 4-digit Hexadecimal number) when started for the first time via `vagrant up`. As the box will reregister with Satellite the first time it is brought up it is recommended that the hostname be configured in the local `Vagrantfile` if the default format is not suitable.
 
 Currently if a box is destroyed via `vagrant destroy` without first running `vagrant ssh -- sudo ./satellite-deregister` you will need to manually remove the box from Satellite.
-
-Additional build targets for Fedora have been added.  These are mostly based off the RHEL 7 build, with the exception of not registering with Satellite.  Setting of the hostname is per the RHEL boxes.
