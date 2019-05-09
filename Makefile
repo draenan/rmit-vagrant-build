@@ -30,7 +30,11 @@ build-rhel7:
 	$(eval export BUILD_VERSION := $(shell date '+%Y%m%d_%H%M'))
 	(cd build/rhel7 && packer build rhel7.json && mv *.box ../../boxes)
 
-build-all: build-rhel6 build-rhel7
+build-rhel8:
+	$(eval export BUILD_VERSION := $(shell date '+%Y%m%d_%H%M'))
+	(cd build/rhel8 && packer build rhel8.json && mv *.box ../../boxes)
 
-.PHONY: list clean clean-boxes clean-cache clean-all upload build-all build-rhel6 build-rhel7
+build-all: build-rhel6 build-rhel7 build-rhel8
+
+.PHONY: list clean clean-boxes clean-cache clean-all upload build-all build-rhel6 build-rhel7 build-rhel8
 
