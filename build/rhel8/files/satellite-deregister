@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo /usr/sbin/subscription-manager remove --all
+sudo /usr/sbin/subscription-manager unregister
+sudo /usr/sbin/subscription-manager clean
+

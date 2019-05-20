@@ -11,19 +11,8 @@ def set_default_hostname(config)
   config.vm.hostname = "#{hostname}"
 end
 
-$script = <<-SCRIPT
-echo NOTE: This system needs to be registered at the Red Hat Customer Portal in
-echo       order to receive updates.  Refer to the /home/vagrant/README.md file
-echo       for instructions.
-echo
-echo NOTE: Red Hat does not support DKMS, and there is no EPEL repo for RHEL 8 as of
-echo       yet.  This means that a kernel update will require manual reinstallation
-echo       of the VirtualBox Guest Additions.
-echo
-SCRIPT
-
 Vagrant.configure("2") do |config|
   set_default_hostname(config)
-  config.vm.provision "shell", inline: $script
+  config.vm.provision "shell", path: "http://satellite.its.rmit.edu.au/pub/bootstrap/bootstrap-baseline-rhel8-interim-default.sh"
 end
 

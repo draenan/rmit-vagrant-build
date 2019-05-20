@@ -30,17 +30,23 @@
         "source": "files/README.md",
         "destination": "/home/vagrant/README.md"
     },{
+        "type": "file",
+        "source": "files/satellite-deregister",
+        "destination": "/home/vagrant/satellite-deregister"
+    },{
         "type": "shell",
         "inline": [
             "sleep 30",
             "sudo mkdir /tmp/vboxguest",
             "sudo mount -t iso9660 -o loop,ro /home/vagrant/VBoxGuestAdditions.iso /tmp/vboxguest",
+            "sudo yum install -y gcc bzip2 kernel-devel elfutils-libelf-devel perl",
             "cd /tmp/vboxguest",
             "sudo ./VBoxLinuxAdditions.run",
             "cd /tmp",
             "sudo umount /tmp/vboxguest",
             "sudo rmdir /tmp/vboxguest",
-            "rm /home/vagrant/VBoxGuestAdditions.iso"
+            "rm /home/vagrant/VBoxGuestAdditions.iso",
+            "sudo /home/vagrant/satellite-deregister"
         ]
     }]
 }
