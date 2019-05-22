@@ -4,10 +4,10 @@ def set_default_hostname(config)
     hostname = File.read(filename)
   else
     hostname = "vagrant-#{SecureRandom.hex(4)}.its.rmit.edu.au"
+    f = File.open(filename, 'w')
+    f.write(hostname)
+    f.close
   end
-  f = File.open(filename, 'w')
-  f.write(hostname)
-  f.close
   config.vm.hostname = "#{hostname}"
 end
 
