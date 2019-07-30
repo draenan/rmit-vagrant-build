@@ -12,6 +12,9 @@ def set_default_hostname(config)
 end
 
 Vagrant.configure("2") do |config|
+  if Vagrant.has_plugin?('vagrant-vbguest')
+    config.vbguest.auto_update = false
+  end
   set_default_hostname(config)
   config.vm.provision "shell", path: "http://satellite.its.rmit.edu.au/pub/bootstrap/bootstrap-baseline-rhel6-default.sh"
 end

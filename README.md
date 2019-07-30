@@ -53,6 +53,19 @@ Currently if a box is destroyed via `vagrant destroy` without first running
 `vagrant ssh -- sudo ./satellite-deregister` you will need to manually remove
 the box from Satellite.
 
+### Note for users of the vagrant-vbguest plugin
+
+The `vagrant-vbguest` plugin fires early in the process of bringing a box up;
+after the machine comes up, but before hostname/networking is configured and
+provisioning is done.  As a result, if the Virtual Box Guest Additions are out
+of date the plugin will attempt to rebuild them, which will potentially cause
+issues if packages need to be installed or updated as the box is yet to be
+registered with Satellite.  As a result the `auto-update` functionality of
+`vbguest` is disabled if the plugin is detected.
+
+If you want to re-enable it, add `config.vbguest.auto_update = true` to your
+`Vagrantfile`.
+
 ## RHEL 8 Build
 
 An interim RHEL 8 build is now available via the `build-rhel8` target. Pending
