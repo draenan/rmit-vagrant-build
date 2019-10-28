@@ -50,8 +50,9 @@ recommended that the hostname be configured in the local `Vagrantfile` if the
 default format is not suitable.
 
 Currently if a box is destroyed via `vagrant destroy` without first running
-`vagrant ssh -- sudo ./satellite-deregister` you will need to manually remove
-the box from Satellite.
+`vagrant ssh -- sudo ./satellite-deregister` you will need to manually
+unsubscribe the box from Satellite. Deleting the system from Satellite is also
+a manual process; see below.
 
 ### Note for users of the vagrant-vbguest plugin
 
@@ -66,13 +67,37 @@ registered with Satellite.  As a result the `auto-update` functionality of
 If you want to re-enable it, add `config.vbguest.auto_update = true` to your
 `Vagrantfile`.
 
-## RHEL 8 Build
+## Now building on Satellite 6
 
-An interim RHEL 8 build is now available via the `build-rhel8` target. Pending
-build of the new Satellite 6 server this host will register itself with the Red
-Hat Customer Portal and subscribe to the "Red Hat Managed Infrastructure for
-CAUDIT" subscription.  As per the other RHEL builds the host should be
-deregistered from the Customer Portal via the `satellite-deregister` script
-prior to the host being destroyed, otherwise it will need to be manually
-removed from the Customer Portal.
+All hosts, including the RHEL 8 host, are now subscribing to and building off
+the [Satellite 6](https://satellite6.its.rmit.edu.au/) server.  The build
+targets now require environment variables to be set in order to provide the
+Organisation and Activation Key when registering the host with Satellite.  For
+example, if building a RHEL 7 host:
+
+```
+$ export VAGRANT_RHEL7_ORG="<orgid>"
+$ export VAGRANT_RHEL7_KEY="<activationkey>"
+$ make build-rhel7
+```
+
+The best way to deal with this is probably to put those environment variables
+into a file and then `source` it.
+
+Please note that using `subscription-manager unregister` to unsubscribe the
+host from Satellite doesn't currently delete it, so the `satellite-deregister`
+script doesn't work the same as it did for Satellite 5 builds.  Until I can
+figure out the API for host deletions, a host can be deleted either from the
+web interface or via logging in and executing the command:
+
+```
+# hammer host delete name=<hostname>
+```
+
+To get a list of all hosts built by the configuration in this repo, run the
+command:
+
+```
+# hammer host list --thin=true --search=vagrantbuild
+```
 

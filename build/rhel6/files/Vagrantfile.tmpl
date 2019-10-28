@@ -1,0 +1,47 @@
+def set_default_hostname(config)
+  filename = '.default-hostname'
+  if File.exist?(filename)
+    hostname = File.read(filename)
+  else
+    hostname = "vagrant-#{SecureRandom.hex(4)}.its.rmit.edu.au"
+    f = File.open(filename, 'w')
+    f.write(hostname)
+    f.close
+  end
+  config.vm.hostname = "#{hostname}"
+end
+
+Vagrant.configure("2") do |config|
+  if Vagrant.has_plugin?('vagrant-vbguest')
+    config.vbguest.auto_update = false
+  end
+  set_default_hostname(config)
+
+  $common = <<-SCRIPT
+  systemctl restart rsyslog
+  subscription-manager remove --all
+  subscription-manager unregister
+  subscription-manager clean
+  rpm -qa | grep -q 'katello-*'
+  if [ "$?" -eq "0" ]; then
+    chkconfig goferd off
+    service goferd stop
+    yum remove -y katello-*
+  fi
+  yum install -y https://satellite6.its.rmit.edu.au/pub/katello-ca-consumer-latest.noarch.rpm
+  subscription-manager register --org="%VAGRANT_RHEL6_ORG%" --activationkey="%VAGRANT_RHEL6_KEY%"
+  yum install -y katello-agent
+  service goferd start
+  chkconfig goferd on
+  yum update -y --exclude=puppet-agent-*
+  echo
+  echo "System provisioned."
+  echo "Run the following command on the Satellite Server to fix OS value:"
+  echo
+  echo "# hammer host update --operatingsystem=\"RHEL 6\" --name=$(uname -n)"
+  echo
+SCRIPT
+
+  config.vm.provision "shell", inline: $common
+end
+

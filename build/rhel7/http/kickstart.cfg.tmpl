@@ -4,34 +4,34 @@ cdrom
 
 lang en_US.UTF-8
 keyboard us
-timezone --utc Australia/Melbourne
+timezone --utc Australia/Melbourne --ntpservers time1.rmit.edu.au
 
 rootpw vagrant
 authconfig --enableshadow --passalgo=sha512 --disablefingerprint
-user --name=vagrant --password=vagrant
+user --name=vagrant --password=vagrant --uid=1002 --gid=1002
 
 selinux --disabled
 firewall --disabled
 
 reboot --eject
 
-network --onboot yes --device eth0 --bootproto dhcp --noipv6 --hostname vagrantbuild-rhel6.localdomain --activate
+network --onboot yes --device enp0s3 --bootproto dhcp --noipv6 --hostname vagrantbuild-rhel7.localdomain --activate
 
 zerombr
 bootloader --location=mbr --driveorder=sda --append=" rhgb crashkernel=auto quiet"
 clearpart --all
 
-part /boot --fstype=ext4 --size=500 --ondisk=sda
+part /boot --fstype=xfs --size=500 --ondisk=sda
 part pv.1010C850-AAA4-46B9-B38C-0429E335F499 --grow --size=1 --ondrive=sda
 volgroup vg_vagrantrhel --pesize=4096 pv.1010C850-AAA4-46B9-B38C-0429E335F499
 
 # Filesystems per our Standard Build Guide
-logvol /        --fstype=ext4 --name=lv_root    --vgname=vg_vagrantrhel --size=10240
-logvol swap                   --name=lv_swap    --vgname=vg_vagrantrhel --size=4096
-logvol /home    --fstype=ext4 --name=lv_home    --vgname=vg_vagrantrhel --size=10240
-logvol /var     --fstype=ext4 --name=lv_var     --vgname=vg_vagrantrhel --size=10240
-logvol /tmp     --fstype=ext4 --name=lv_tmp     --vgname=vg_vagrantrhel --size=6144
-logvol /opt     --fstype=ext4 --name=lv_opt     --vgname=vg_vagrantrhel --size=10240
+logvol /        --fstype=xfs --name=lv_root    --vgname=vg_vagrantrhel --size=10240
+logvol swap                  --name=lv_swap    --vgname=vg_vagrantrhel --size=4096
+logvol /home    --fstype=xfs --name=lv_home    --vgname=vg_vagrantrhel --size=10240
+logvol /var     --fstype=xfs --name=lv_var     --vgname=vg_vagrantrhel --size=10240
+logvol /tmp     --fstype=xfs --name=lv_tmp     --vgname=vg_vagrantrhel --size=6144
+logvol /opt     --fstype=xfs --name=lv_opt     --vgname=vg_vagrantrhel --size=10240
 
 # Install packages.
 # These are base packages installed via our normal Kickstart (excluding open-vm-tools)
@@ -46,12 +46,11 @@ wget
 # Post-install starts here
 %post
 # Register with Satellite and update everything
-/bin/rpm --import http://satellite.its.rmit.edu.au/pub/repo-keys/RPM-GPG-KEY-RMIT.pub
-/usr/bin/curl http://satellite.its.rmit.edu.au/pub/bootstrap/bootstrap-baseline-rhel6-default.sh | /bin/bash
+/usr/bin/yum install -y https://satellite6.its.rmit.edu.au/pub/katello-ca-consumer-latest.noarch.rpm
+/usr/bin/subscription-manager register --org="%VAGRANT_RHEL7_ORG%" --activationkey="%VAGRANT_RHEL7_KEY%"
 /usr/bin/yum -y update
 
 # Install base packages normally installed by "redhat" Puppet class
-rpm --import http://satellite.its.rmit.edu.au/pub/repo-keys/RPM-GPG-KEY-EPEL-6.pub
 yum install -y bind-utils csh emacs-nox expect ksh lsof rsync screen strace tcpdump telnet tmux tree unzip vim-common vim-enhanced vim-minimal zip zsh
 
 # Confgure sudo for use with vagrant
@@ -69,6 +68,20 @@ EOF
 /bin/chown -R vagrant:vagrant /home/vagrant/.ssh
 /bin/chmod 0600 /home/vagrant/.ssh/*
 /bin/echo 'UseDNS no' >> /etc/ssh/sshd_config
+
+# Fix for RHEL7 kdump in our standard Kickstart DOESN'T WORK(!)
+# We disable it totally in Puppet, so do it here.
+/usr/bin/systemctl disable kdump
+
+# Configure journald RAM usage per https://access.redhat.com/articles/4095141.
+# This will restrict the RAM usage for journald on hosts with 4GB or less RAM.
+# Note the use of "-le", as hosts actually have less total RAM available than
+# physical RAM due to kernel structures,
+if [ $(/bin/free -g | /bin/awk '/Mem/ {print $2}') -le 4 ]; then
+  /bin/sed -e 's/#RuntimeMaxUse=/RuntimeMaxUse=500M/' \
+           -e 's/#RuntimeMaxFileSize=/RuntimeMaxFileSize=10M/' \
+           -i'.orig' /etc/systemd/journald.conf
+fi
 
 # Clean-up
 /usr/bin/yum -y clean all

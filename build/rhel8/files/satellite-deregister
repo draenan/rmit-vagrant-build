@@ -1,5 +1,16 @@
 #!/bin/bash
-sudo /usr/sbin/subscription-manager remove --all
-sudo /usr/sbin/subscription-manager unregister
-sudo /usr/sbin/subscription-manager clean
+subscription-manager remove --all
+subscription-manager unregister
+subscription-manager clean
+rpm -qa | grep -q 'katello-*'
+if [ "$?" -eq "0" ]; then
+  systemctl disable goferd
+  systemctl stop goferd
+  yum remove -y katello-*
+fi
+echo
+echo "Run the following command on the Satellite server to delete the system if required:"
+echo
+echo "# hammer host delete --name=$(uname -n)"
+echo
 

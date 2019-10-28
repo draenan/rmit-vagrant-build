@@ -54,7 +54,8 @@ wget
 %post
 # Register with Satellite and update everything
 #
-/usr/bin/curl http://satellite.its.rmit.edu.au/pub/bootstrap/bootstrap-baseline-rhel8-interim-default.sh | /bin/bash
+/usr/bin/yum install -y https://satellite6.its.rmit.edu.au/pub/katello-ca-consumer-latest.noarch.rpm
+/usr/bin/subscription-manager register --org="%VAGRANT_RHEL8_ORG%" --activationkey="%VAGRANT_RHEL8_KEY%"
 /usr/bin/yum -y update
 
 # Install base packages normally installed by "redhat" Puppet class. NOTE:

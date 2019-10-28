@@ -23,13 +23,9 @@
     "post-processors": [{
         "type": "vagrant",
         "vagrantfile_template": "files/Vagrantfile",
-        "output": "rmit-rhel-8-x86_64-interim-nocm-{{.Provider}}-{{user `build_version`}}.box"
+        "output": "rmit-rhel-8-x86_64-nocm-{{.Provider}}-{{user `build_version`}}.box"
     }],
     "provisioners": [{
-        "type": "file",
-        "source": "files/README.md",
-        "destination": "/home/vagrant/README.md"
-    },{
         "type": "file",
         "source": "files/satellite-deregister",
         "destination": "/home/vagrant/satellite-deregister"

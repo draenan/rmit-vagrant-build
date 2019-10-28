@@ -1,32 +1,16 @@
-#!/usr/bin/python
+#!/bin/bash
+subscription-manager remove --all
+subscription-manager unregister
+subscription-manager clean
+rpm -qa | grep -q 'katello-*'
+if [ "$?" -eq "0" ]; then
+  systemctl disable goferd
+  systemctl stop goferd
+  yum remove -y katello-*
+fi
+echo
+echo "Run the following command on the Satellite server to delete the system if required:"
+echo
+echo "# hammer host delete --name=$(uname -n)"
+echo
 
-import sys
-import os
-import traceback
-import xmlrpclib
-import ssl
-
-satellite_url = 'https://satellite.its.rmit.edu.au/rpc/api'
-systemid_file = '/etc/sysconfig/rhn/systemid'
-
-if (__name__ == '__main__'):
-    if (os.path.exists(systemid_file)):
-        try:
-            _create_unverified_https_context = ssl._create_unverified_context
-        except AttributeError:
-            pass
-        else:
-            ssl._create_default_https_context = _create_unverified_https_context
-        try:
-            client = xmlrpclib.Server(satellite_url)
-            with open(systemid_file, 'r') as fd:
-                systemid_data = fd.read()
-                rc = client.system.deleteSystem(systemid_data)
-                print('Successfully deregistered from Satellite.')
-        except:
-            print('Exception while deregistering.')
-            print traceback.format_exc()
-            sys.exit(1)
-        os.remove(systemid_file)
-    else:
-        print('The system is not registered with Satellite.')
