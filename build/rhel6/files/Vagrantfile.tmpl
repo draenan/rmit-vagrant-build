@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
   set_default_hostname(config)
 
   $common = <<-SCRIPT
-  systemctl restart rsyslog
+  service rsyslog restart
   subscription-manager remove --all
   subscription-manager unregister
   subscription-manager clean
