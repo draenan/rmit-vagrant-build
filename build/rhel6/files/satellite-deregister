@@ -9,7 +9,8 @@ if [ "$?" -eq "0" ]; then
   yum remove -y katello-*
 fi
 echo
-echo "Run the following command on the Satellite server to delete the system if required:"
+echo "Run the following command on the Satellite server to delete the system"
+echo "(required prior to reprovisioning):"
 echo
 echo "# hammer host delete --name=$(uname -n)"
 echo
