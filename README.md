@@ -2,8 +2,8 @@
 
 This repo provides the necessary framework to build VirtualBox-based VMs for
 use with Vagrant. The built boxes will be placed in the `boxes` subdirectory
-and can then be uploaded to the old
-[Satellite](http://satellite.its.rmit.edu.au/boxes/) server.
+and can then be uploaded to the
+[Unixfiles](http://unixfiles.int.its.rmit.edu.au/boxes/) server.
 
 Vagrant and Packer are both available to be installed via
 [Homebrew](http://brew.sh):
@@ -34,8 +34,8 @@ include:
 * `clean-cache` - Removes `packer_cache` directories
 * `clean-tempfiles` - Removes temporary files and directories
 * `clean-all` - Executes all `clean-*` targets
-* `upload` - Uses `scp` to upload boxes in the `boxes` subdirectory to the old
-  [Satellite](http://satellite.its.rmit.edu.au/boxes/) server
+* `upload` - Uses `scp` to upload boxes in the `boxes` subdirectory to the
+  [Unixfiles](http://unixfiles.int.its.rmit.edu.au/boxes/) server
 
 Build targets should be fairly obvious in that they `cd` to the relevant
 subdirectory and execute a `packer build` command, moving the completed box to

@@ -10,7 +10,7 @@
         "memory": "768",
         "iso_checksum_type": "sha256",
         "iso_checksum": "7fdfed9c7cced4e526a362e64ed06bcdc6ce0394a98625a40e7d05db29bf7b86",
-        "iso_url": "http://satellite.its.rmit.edu.au/pub/ks/repo/rhel-8.2-x86_64-dvd.iso",
+        "iso_url": "http://unixfiles.int.its.rmit.edu.au/pub/ks/repo/rhel-8.2-x86_64-dvd.iso",
         "ssh_username": "vagrant",
         "ssh_password": "vagrant",
         "ssh_timeout": "20m",

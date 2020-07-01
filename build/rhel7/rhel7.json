@@ -9,7 +9,7 @@
         "disk_size": "61440",
         "iso_checksum_type": "sha256",
         "iso_checksum": "3ca2017f12392fc8acad435c05a941bb88620ece8eb5740278ffa61d8340792d",
-        "iso_url": "http://satellite.its.rmit.edu.au/pub/ks/repo/rhel-server-7.8-x86_64-dvd.iso",
+        "iso_url": "http://unixfiles.int.its.rmit.edu.au/pub/ks/repo/rhel-server-7.8-x86_64-dvd.iso",
         "ssh_username": "vagrant",
         "ssh_password": "vagrant",
         "ssh_timeout": "20m",

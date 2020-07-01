@@ -30,7 +30,7 @@ clean-all: clean-boxes clean-cache clean-tempfiles
 
 upload:
 ifneq ($(wildcard boxes/*.box),)
-	scp boxes/*.box satlprdap01.int.its.rmit.edu.au:/var/www/html/boxes/
+	scp boxes/*.box unixfiles.int.its.rmit.edu.au:/var/www/html/boxes/
 else
 	@echo No boxes to upload.
 endif
